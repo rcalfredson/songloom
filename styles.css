@@ -1,0 +1,384 @@
+:root {
+  --bg: #f6f1e7;
+  --panel: rgba(255, 252, 246, 0.86);
+  --panel-strong: #fffdf8;
+  --border: rgba(70, 54, 36, 0.14);
+  --text: #261d15;
+  --muted: #6c5a4b;
+  --accent: #17594a;
+  --accent-soft: rgba(23, 89, 74, 0.1);
+  --shadow: 0 24px 60px rgba(70, 54, 36, 0.12);
+  --sheet-font-size: 16px;
+  --sheet-line-height: 1.35;
+  --sheet-font-family: "IBM Plex Mono", "SFMono-Regular", ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.9), transparent 32%),
+    linear-gradient(180deg, #f9f4eb 0%, #efe5d4 100%);
+  color: var(--text);
+  font-family: "Instrument Sans", "Avenir Next", "Segoe UI", sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button,
+.button-like {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  padding: 0.7rem 1rem;
+  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+button:hover,
+.button-like:hover {
+  transform: translateY(-1px);
+}
+
+button.secondary,
+.button-like.secondary {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.file-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.file-button input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.app-shell {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+  padding: 1.5rem;
+}
+
+.panel {
+  background: var(--panel);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+}
+
+.editor-panel {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.preview-panel {
+  padding: 1.5rem;
+  overflow: auto;
+}
+
+.panel-header,
+.preview-header,
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+h2 {
+  font-size: 1.3rem;
+}
+
+.panel-copy,
+.section-head p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.meta-grid,
+.toolbar {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.meta-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.field span,
+.toggle span {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea,
+.lyrics-input {
+  width: 100%;
+  border: 1px solid rgba(70, 54, 36, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 253, 248, 0.95);
+  padding: 0.8rem 0.95rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus,
+.lyrics-input:focus {
+  border-color: rgba(23, 89, 74, 0.35);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+  outline: none;
+}
+
+.field-notes {
+  grid-column: 1 / -1;
+}
+
+.compact-field output {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: rgba(255, 253, 248, 0.95);
+  border: 1px solid rgba(70, 54, 36, 0.12);
+  border-radius: 18px;
+  min-height: 3rem;
+  padding: 0.7rem 0.95rem;
+}
+
+.toggle input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--accent);
+}
+
+.editor-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  min-height: 0;
+  flex: 1;
+}
+
+.lyrics-input {
+  flex: 1;
+  min-height: 320px;
+  resize: vertical;
+  font-family: "IBM Plex Mono", "SFMono-Regular", ui-monospace, monospace;
+  line-height: 1.45;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.sheet-preview {
+  min-height: calc(100vh - 6rem);
+  background: var(--panel-strong);
+  border: 1px solid rgba(70, 54, 36, 0.1);
+  border-radius: 24px;
+  padding: 2.5rem;
+  font-family: var(--sheet-font-family);
+  font-size: var(--sheet-font-size);
+  line-height: var(--sheet-line-height);
+}
+
+.sheet-meta {
+  margin-bottom: 2rem;
+  break-inside: avoid;
+}
+
+.sheet-meta h1 {
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  margin-bottom: 0.35rem;
+}
+
+.meta-line,
+.meta-notes {
+  margin: 0;
+  color: var(--muted);
+  white-space: pre-wrap;
+}
+
+.meta-line:empty,
+.meta-notes:empty {
+  display: none;
+}
+
+.meta-notes {
+  margin-top: 0.65rem;
+}
+
+.song-body.columns-2 {
+  column-count: 2;
+  column-gap: 2.5rem;
+}
+
+.render-line {
+  break-inside: avoid;
+  margin-bottom: 0.18em;
+}
+
+.render-line.blank-line {
+  min-height: calc(var(--sheet-font-size) * var(--sheet-line-height));
+}
+
+.chord-row,
+.lyric-row {
+  margin: 0;
+  white-space: pre;
+}
+
+.chord-row {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.chord-row.is-hidden {
+  display: none;
+}
+
+@media (max-width: 980px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sheet-preview {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-shell,
+  .editor-panel,
+  .preview-panel {
+    padding: 1rem;
+  }
+
+  .meta-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field-notes {
+    grid-column: auto;
+  }
+
+  .sheet-preview {
+    padding: 1.25rem;
+  }
+
+  .song-body.columns-2 {
+    column-count: 1;
+  }
+}
+
+@page {
+  size: auto;
+  margin: 0.5in;
+}
+
+@media print {
+  body {
+    background: white;
+  }
+
+  .app-shell {
+    display: block;
+    padding: 0;
+  }
+
+  .editor-panel,
+  .preview-header {
+    display: none;
+  }
+
+  .preview-panel,
+  .sheet-preview {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+    min-height: auto;
+    padding: 0;
+  }
+
+  .sheet-meta {
+    margin-bottom: 1.2rem;
+  }
+
+  .song-body.columns-2 {
+    column-gap: 0.45in;
+  }
+
+  .render-line,
+  .sheet-meta {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
