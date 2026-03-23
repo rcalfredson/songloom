@@ -22,13 +22,15 @@ You can also open `index.html` directly in a browser, though a local server is u
 
 1. Enter your title, artist, and optional notes.
 2. Write lyrics with inline chords like `[G]Hello [C]darkness my old [D]friend`.
-3. Adjust size, spacing, columns, and chord visibility.
-4. Use `Print / PDF` to open the browser print dialog.
-5. Use `Save JSON` and `Load JSON` to keep working copies locally.
+3. Add section labels on their own line with braces, like `{Verse 1}` or `{Chorus}`.
+4. Adjust size, spacing, columns, chord visibility, and section visibility.
+5. Use `Print / PDF` to open the browser print dialog.
+6. Use `Save JSON` and `Load JSON` to keep working copies locally.
 
 ## Notes
 
-- Square-bracket syntax is treated as chord markup, so labels like `[Verse 1]` or `[Intro]` are rendered like chord annotations. If you hide chords, those section labels will also be hidden.
+- Use `[]` for chords and `{}` for section labels.
+- Older charts with a whole-line bracket label like `[Verse 1]` still work as legacy section labels, but the preferred syntax is `{Verse 1}`.
 - The lead-sheet body uses a monospaced layout so chord alignment stays reliable in preview and print.
 
 ## Keyboard shortcuts

@@ -7,6 +7,28 @@ export function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
+function looksLikeChordSymbol(value) {
+  return /^[A-G](?:#|b)?(?:maj|min|m|sus|add|dim|aug)?(?:\d+)?(?:\/[A-G](?:#|b)?)?(?:\([^)]*\))?$/iu.test(
+    value.trim(),
+  );
+}
+
+export function parseSectionLine(line) {
+  const trimmed = line.trim();
+  const explicitMatch = trimmed.match(/^\{([^{}]+)\}$/u);
+
+  if (explicitMatch) {
+    return { label: explicitMatch[1].trim(), syntax: "brace" };
+  }
+
+  const legacyMatch = trimmed.match(/^\[([^\[\]]+)\]$/u);
+  if (legacyMatch && !looksLikeChordSymbol(legacyMatch[1])) {
+    return { label: legacyMatch[1].trim(), syntax: "legacy-bracket" };
+  }
+
+  return null;
+}
+
 export function parseChordLine(line) {
   const tokens = [];
   const chordPattern = /\[([^\]]+)\]/g;
@@ -54,7 +76,25 @@ export function findChordStart(chordChars, desiredStart, chordText) {
   return start;
 }
 
-export function renderAlignedLine(line, showChords) {
+export function renderLine(line, options) {
+  const { showChords, showSections } = options;
+  const section = parseSectionLine(line);
+
+  if (section) {
+    if (!showSections) {
+      return { html: "", hasVisibleContent: false };
+    }
+
+    return {
+      html: `
+        <div class="section-line">
+          <p class="section-label">${escapeHtml(section.label)}</p>
+        </div>
+      `,
+      hasVisibleContent: true,
+    };
+  }
+
   const tokens = parseChordLine(line);
   const chordChars = [];
   let lyricLine = "";
@@ -90,7 +130,7 @@ export function renderAlignedLine(line, showChords) {
   const hasChordContent = chordLine.trim().length > 0;
 
   if (!showChords && !hasVisibleLyric && hasChordContent) {
-    return { html: "", hasVisibleLyric: false };
+    return { html: "", hasVisibleContent: false };
   }
 
   const displayLyric = !showChords && hasChordContent ? lyricLine.replace(/^ +/u, "") : lyricLine;
@@ -106,6 +146,6 @@ export function renderAlignedLine(line, showChords) {
         <pre class="lyric-row">${escapeHtml(safeLyric)}</pre>
       </div>
     `,
-    hasVisibleLyric: displayLyric.trim().length > 0,
+    hasVisibleContent: displayLyric.trim().length > 0,
   };
 }

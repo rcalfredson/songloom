@@ -1,13 +1,13 @@
-import { renderAlignedLine } from "./parser.mjs";
+import { renderLine } from "./parser.mjs";
 
 const DEFAULT_SONG = {
   title: "Is This Love",
   artist: "Bob Marley",
   notes: "Adjust spacing or columns for print.",
-  lyrics: `[Intro]
+  lyrics: `{Intro}
 [F#m] [D] [A] [x2]
 
-[Verse 1]
+{Verse 1}
 [A] [E/G#]I wanna [F#m]love ya, [D]and treat you [A]right.
 [E/G#]I wanna [F#m]love ya, every [D]day and every [A]night.
 We'll [E/G#]be to-[F#m]gether, with a [D] roof right over our [A]heads,
@@ -17,6 +17,7 @@ We'll [E/G#]share the [F#m]same room; [D]Jah provide the [A]bread.`,
   lineSpacing: 1.35,
   columns: 1,
   showChords: true,
+  showSections: true,
 };
 
 const state = { ...DEFAULT_SONG };
@@ -32,6 +33,7 @@ const elements = {
   lineSpacingOutput: document.querySelector("#lineSpacingOutput"),
   columnSelect: document.querySelector("#columnSelect"),
   showChordsInput: document.querySelector("#showChordsInput"),
+  showSectionsInput: document.querySelector("#showSectionsInput"),
   printButton: document.querySelector("#printButton"),
   saveButton: document.querySelector("#saveButton"),
   loadInput: document.querySelector("#loadInput"),
@@ -50,11 +52,13 @@ function renderPreview() {
   elements.sheetPreview.style.setProperty("--sheet-font-size", `${state.fontSize}px`);
   elements.sheetPreview.style.setProperty("--sheet-line-height", String(state.lineSpacing));
 
-  const renderedLines = state.lyrics.split("\n").map((line) => renderAlignedLine(line, state.showChords));
+  const renderedLines = state.lyrics
+    .split("\n")
+    .map((line) => renderLine(line, { showChords: state.showChords, showSections: state.showSections }));
   const normalizedLines = [...renderedLines];
 
   if (!state.showChords) {
-    while (normalizedLines.length > 0 && !normalizedLines[0].hasVisibleLyric) {
+    while (normalizedLines.length > 0 && !normalizedLines[0].hasVisibleContent) {
       normalizedLines.shift();
     }
   }
@@ -76,6 +80,7 @@ function syncFormattingControls() {
   elements.lineSpacingInput.value = String(state.lineSpacing);
   elements.columnSelect.value = String(state.columns);
   elements.showChordsInput.checked = state.showChords;
+  elements.showSectionsInput.checked = state.showSections;
   elements.fontSizeOutput.value = `${state.fontSize}px`;
   elements.lineSpacingOutput.value = Number(state.lineSpacing).toFixed(2);
 }
@@ -119,6 +124,7 @@ function loadSongFile(file) {
           : 1.35,
         columns: parsed.columns === 2 ? 2 : 1,
         showChords: parsed.showChords !== false,
+        showSections: parsed.showSections !== false,
       });
     } catch (error) {
       window.alert("Could not load that file. Please choose a SongLoom JSON export.");
@@ -139,6 +145,9 @@ function attachEvents() {
   );
   elements.columnSelect.addEventListener("change", (event) => updateState({ columns: Number(event.target.value) }));
   elements.showChordsInput.addEventListener("change", (event) => updateState({ showChords: event.target.checked }));
+  elements.showSectionsInput.addEventListener("change", (event) =>
+    updateState({ showSections: event.target.checked }),
+  );
   elements.printButton.addEventListener("click", () => window.print());
   elements.saveButton.addEventListener("click", downloadJson);
   elements.loadInput.addEventListener("change", (event) => {

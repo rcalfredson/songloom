@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { parseChordLine, renderAlignedLine } from "../parser.mjs";
+import { parseChordLine, parseSectionLine, renderLine } from "../parser.mjs";
 
 {
   const tokens = parseChordLine("[A] [E/G#]I wanna [F#m]love ya");
@@ -11,26 +11,43 @@ import { parseChordLine, renderAlignedLine } from "../parser.mjs";
 }
 
 {
-  const rendered = renderAlignedLine("[A] [E/G#]I wanna love ya", true);
+  const rendered = renderLine("[A] [E/G#]I wanna love ya", { showChords: true, showSections: true });
   assert.match(rendered.html, /A E\/G#/);
-  assert.equal(rendered.hasVisibleLyric, true);
+  assert.equal(rendered.hasVisibleContent, true);
 }
 
 {
-  const rendered = renderAlignedLine("[A] [E/G#]I wanna love ya", false);
+  const rendered = renderLine("[A] [E/G#]I wanna love ya", { showChords: false, showSections: true });
   assert.match(rendered.html, />I wanna love ya</);
   assert.doesNotMatch(rendered.html, />\s+I wanna love ya</);
 }
 
 {
-  const rendered = renderAlignedLine("[Intro]", false);
-  assert.equal(rendered.html, "");
-  assert.equal(rendered.hasVisibleLyric, false);
+  const section = parseSectionLine("{Intro}");
+  assert.deepEqual(section, { label: "Intro", syntax: "brace" });
 }
 
 {
-  const rendered = renderAlignedLine("", false);
-  assert.equal(rendered.hasVisibleLyric, false);
+  const legacySection = parseSectionLine("[Verse 1]");
+  assert.deepEqual(legacySection, { label: "Verse 1", syntax: "legacy-bracket" });
+}
+
+{
+  const rendered = renderLine("{Intro}", { showChords: false, showSections: false });
+  assert.equal(rendered.html, "");
+  assert.equal(rendered.hasVisibleContent, false);
+}
+
+{
+  const rendered = renderLine("{Verse 1}", { showChords: false, showSections: true });
+  assert.match(rendered.html, /section-label/);
+  assert.match(rendered.html, />Verse 1</);
+  assert.equal(rendered.hasVisibleContent, true);
+}
+
+{
+  const rendered = renderLine("", { showChords: false, showSections: true });
+  assert.equal(rendered.hasVisibleContent, false);
   assert.match(rendered.html, /blank-line/);
 }
 
