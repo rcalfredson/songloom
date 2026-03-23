@@ -26,7 +26,18 @@ You can also open `index.html` directly in a browser, though a local server is u
 4. Use `Print / PDF` to open the browser print dialog.
 5. Use `Save JSON` and `Load JSON` to keep working copies locally.
 
+## Notes
+
+- Square-bracket syntax is treated as chord markup, so labels like `[Verse 1]` or `[Intro]` are rendered like chord annotations. If you hide chords, those section labels will also be hidden.
+- The lead-sheet body uses a monospaced layout so chord alignment stays reliable in preview and print.
+
 ## Keyboard shortcuts
 
 - `Cmd+P` / `Ctrl+P`: Print
 - `Cmd+S` / `Ctrl+S`: Save JSON
+
+## Development Check
+
+```bash
+node tests/parser.test.mjs
+```
